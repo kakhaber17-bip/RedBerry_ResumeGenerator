@@ -27,3 +27,10 @@ export interface CvData {
   experiences: Experience[];
   educations: Education[];
 }
+
+// 🆕 შენახული CV
+export interface SavedCv {
+  id: string;
+  createdAt: number;
+  data: CvData;
+}

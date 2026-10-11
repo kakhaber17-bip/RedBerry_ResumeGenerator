@@ -1,20 +1,19 @@
-import type { InputHTMLAttributes, ChangeEvent, FocusEvent } from 'react';
+import type { InputHTMLAttributes } from 'react';
 import { CheckIcon } from '../../assets/icons/CheckIcon';
 import { WarningIcon } from '../../assets/icons/WarningIcon';
 
-interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'onBlur'> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  name: string;
-  value: string;
   error?: string;
   touched?: boolean;
   hint?: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onBlur: (e: FocusEvent<HTMLInputElement>) => void;
 }
 
-export function Input({ label, name, value, error, touched, hint, onChange, onBlur, ...props }: InputProps) {
-  const isValid = touched && !error && value;
+export function Input({ label, name, error, touched, hint, ...props }: InputProps) {
+  const value = props.value as string;
+  const isDate = props.type === 'date';
+
+  const isValid = !isDate && touched && !error && value;
   const isError = touched && !!error;
 
   const borderClass = isError
@@ -29,16 +28,19 @@ export function Input({ label, name, value, error, touched, hint, onChange, onBl
         {label}
       </label>
       <div className="relative">
-        <input {...props} id={name}  name={name} value={value}
-          onChange={onChange} onBlur={onBlur}
-          className={`w-full p-2 border rounded-md outline-none transition-colors focus:border-purple-500 ${borderClass}`} />
+        <input
+          {...props}
+          id={name}
+          name={name}
+          className={`w-full p-2 border rounded-md outline-none transition-colors focus:border-purple-500 ${borderClass}`}
+        />
         {isValid && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none">
             <CheckIcon />
           </span>
         )}
-        {isError && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
+        {isError && !isDate && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-red-500 pointer-events-none">
             <WarningIcon />
           </span>
         )}

@@ -1,4 +1,4 @@
-import type { SelectHTMLAttributes, ChangeEvent, FocusEvent } from 'react';
+import type { SelectHTMLAttributes } from 'react';
 import { CheckIcon } from '../../assets/icons/CheckIcon';
 import { WarningIcon } from '../../assets/icons/WarningIcon';
 
@@ -7,32 +7,26 @@ interface Option {
   label: string;
 }
 
-interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'onBlur'> {
+interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
-  name: string;
-  value: string;
   error?: string;
   touched?: boolean;
   hint?: string;
   placeholder?: string;
   options: Option[];
-  onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-  onBlur: (e: FocusEvent<HTMLSelectElement>) => void;
 }
 
 export function Select({
   label,
   name,
-  value,
   error,
   touched,
   hint,
   placeholder = 'აირჩიე',
   options,
-  onChange,
-  onBlur,
   ...props
 }: SelectProps) {
+  const value = props.value as string;
   const isValid = touched && !error && value;
   const isError = touched && !!error;
 
@@ -48,11 +42,10 @@ export function Select({
         {label}
       </label>
       <div className="relative">
-        <select {...props} id={name}
+        <select
+          {...props}
+          id={name}
           name={name}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
           className={`w-full p-2 pr-10 border rounded-md outline-none bg-white transition-colors focus:border-purple-500 ${borderClass}`}
         >
           <option value="">{placeholder}</option>
@@ -63,12 +56,12 @@ export function Select({
           ))}
         </select>
         {isValid && (
-          <span className="absolute right-8 top-1/2 -translate-y-1/2 text-green-500">
+          <span className="absolute right-8 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none">
             <CheckIcon />
           </span>
         )}
         {isError && (
-          <span className="absolute right-8 top-1/2 -translate-y-1/2 text-red-500">
+          <span className="absolute right-8 top-1/2 -translate-y-1/2 text-red-500 pointer-events-none">
             <WarningIcon />
           </span>
         )}

@@ -1,16 +1,17 @@
-import { useContext, type ChangeEvent } from 'react';
+import { useContext, useRef, type ChangeEvent } from 'react';
 import { Formik, Form } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '../../../components/ui/Input';
 import { TextArea } from '../../../components/ui/TextArea';
 import { Button } from '../../../components/ui/Button';
 import { CvContext } from '../context/CvContext';
-import { personalInfoSchema } from '../validation/schemas';
+import { personalInfoSchema, formatPhone } from '../validation/schemas';
 import type { PersonalInfo } from '../types';
 
 export function PersonalInfoForm() {
   const { cvData, setCvData } = useContext(CvContext);
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (
     e: ChangeEvent<HTMLInputElement>,
@@ -20,7 +21,13 @@ export function PersonalInfoForm() {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onloadend = () => setFieldValue('image', reader.result);
+    reader.onloadend = () => {
+      setFieldValue('image', reader.result);
+      setCvData((prev) => ({
+        ...prev,
+        personalInfo: { ...prev.personalInfo, image: reader.result as string },
+      }));
+    };
     reader.readAsDataURL(file);
   };
 
@@ -40,42 +47,69 @@ export function PersonalInfoForm() {
               label="სახელი"
               name="name"
               value={formik.values.name}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.handleChange(e);
+                setCvData((prev) => ({
+                  ...prev,
+                  personalInfo: { ...prev.personalInfo, name: e.target.value },
+                }));
+              }}
               onBlur={formik.handleBlur}
               error={formik.errors.name}
               touched={formik.touched.name}
-              hint="მინიმუმ 2 სიმბოლო"
+              hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
             />
             <Input
               label="გვარი"
               name="lastName"
               value={formik.values.lastName}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.handleChange(e);
+                setCvData((prev) => ({
+                  ...prev,
+                  personalInfo: { ...prev.personalInfo, lastName: e.target.value },
+                }));
+              }}
               onBlur={formik.handleBlur}
               error={formik.errors.lastName}
               touched={formik.touched.lastName}
-              hint="მინიმუმ 2 სიმბოლო"
+              hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
             />
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-bold text-gray-700">პირადი ფოტოს ატვირთვა</label>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-bold text-gray-700">პირადი ფოტოს ატვირთვა</span>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-md transition-colors"
+            >
+              ატვირთვა
+            </button>
             <input
+              ref={fileInputRef}
               type="file"
               accept="image/*"
               onChange={(e) => handleImageUpload(e, formik.setFieldValue)}
-              className="border p-2 rounded"
+              className="hidden"
             />
-            {formik.touched.image && formik.errors.image && (
-              <span className="text-xs text-red-500">{formik.errors.image}</span>
-            )}
           </div>
+
+          {formik.touched.image && formik.errors.image && (
+            <span className="text-xs text-red-500">{formik.errors.image}</span>
+          )}
 
           <TextArea
             label="ჩემ შესახებ"
             name="aboutMe"
             value={formik.values.aboutMe}
-            onChange={formik.handleChange}
+            onChange={(e) => {
+              formik.handleChange(e);
+              setCvData((prev) => ({
+                ...prev,
+                personalInfo: { ...prev.personalInfo, aboutMe: e.target.value },
+              }));
+            }}
             onBlur={formik.handleBlur}
             error={formik.errors.aboutMe}
             touched={formik.touched.aboutMe}
@@ -85,26 +119,40 @@ export function PersonalInfoForm() {
 
           <div className="flex gap-4">
             <Input
-              label="ემაილი"
+              label="ელ.ფოსტა"
               name="email"
               type="email"
-              placeholder="example@mail.com"
+              placeholder="example@redberry.ge"
               value={formik.values.email}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                formik.handleChange(e);
+                setCvData((prev) => ({
+                  ...prev,
+                  personalInfo: { ...prev.personalInfo, email: e.target.value },
+                }));
+              }}
               onBlur={formik.handleBlur}
               error={formik.errors.email}
               touched={formik.touched.email}
+              hint="უნდა მთავრდებოდეს @redberry.ge-ით"
             />
             <Input
               label="მობილურის ნომერი"
               name="phone"
-              placeholder="+995 555 12 34 56"
+              placeholder="+995 5XX XX XX XX"
               value={formik.values.phone}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                const formatted = formatPhone(e.target.value);
+                formik.setFieldValue('phone', formatted);
+                setCvData((prev) => ({
+                  ...prev,
+                  personalInfo: { ...prev.personalInfo, phone: formatted },
+                }));
+              }}
               onBlur={formik.handleBlur}
               error={formik.errors.phone}
               touched={formik.touched.phone}
-              hint="ფორმატი: +995 5XX XX XX XX"
+              hint="უნდა აკმაყოფილებდეს ქართული ნომრის ფორმატს"
             />
           </div>
 

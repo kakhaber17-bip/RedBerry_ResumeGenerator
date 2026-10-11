@@ -1,5 +1,21 @@
-import { createContext, useState, type ReactNode } from 'react';
-import type { CvData, PersonalInfo, Experience, Education } from '../types';
+import {
+  createContext,
+  useState,
+  useEffect,
+  type ReactNode,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
+import type { CvData, PersonalInfo, Experience, Education, SavedCv } from '../types';
+import {
+  loadDraft,
+  saveDraft,
+  clearDraft,
+  loadSavedList,
+  saveCvToList,
+  deleteCvFromList,
+  getCvById,
+} from '../storage/cvStorage';
 
 export const emptyPersonalInfo: PersonalInfo = {
   name: '',
@@ -33,12 +49,22 @@ const initialData: CvData = {
 
 interface CvContextValue {
   cvData: CvData;
-  setCvData: React.Dispatch<React.SetStateAction<CvData>>;
+  setCvData: Dispatch<SetStateAction<CvData>>;
+  savedList: SavedCv[];
+  saveCurrentCv: () => void;
+  deleteSavedCv: (id: string) => void;
+  loadCvById: (id: string) => void;
+  resetDraft: () => void;
 }
 
 export const CvContext = createContext<CvContextValue>({
   cvData: initialData,
   setCvData: () => {},
+  savedList: [],
+  saveCurrentCv: () => {},
+  deleteSavedCv: () => {},
+  loadCvById: () => {},
+  resetDraft: () => {},
 });
 
 interface ProviderProps {
@@ -46,7 +72,51 @@ interface ProviderProps {
 }
 
 export function CvProvider({ children }: ProviderProps) {
-  const [cvData, setCvData] = useState<CvData>(initialData);
+  const [cvData, setCvData] = useState<CvData>(() => loadDraft(initialData));
+  const [savedList, setSavedList] = useState<SavedCv[]>(() => loadSavedList());
 
-  return <CvContext.Provider value={{ cvData, setCvData }}>{children}</CvContext.Provider>;
+  // Draft-ის ავტო-შენახვა
+  useEffect(() => {
+    saveDraft(cvData);
+  }, [cvData]);
+
+  const saveCurrentCv = () => {
+    const saved = saveCvToList(cvData);
+    setSavedList((prev) => [saved, ...prev]);
+  };
+
+  const deleteSavedCv = (id: string) => {
+    const updated = deleteCvFromList(id);
+    setSavedList(updated);
+  };
+
+  const loadCvById = (id: string) => {
+    const found = getCvById(id);
+    if (found) setCvData(found.data);
+  };
+
+  const resetDraft = () => {
+    clearDraft();
+    setCvData({
+      personalInfo: { ...emptyPersonalInfo },
+      experiences: [],
+      educations: [],
+    });
+  };
+
+  return (
+    <CvContext.Provider
+      value={{
+        cvData,
+        setCvData,
+        savedList,
+        saveCurrentCv,
+        deleteSavedCv,
+        loadCvById,
+        resetDraft,
+      }}
+    >
+      {children}
+    </CvContext.Provider>
+  );
 }

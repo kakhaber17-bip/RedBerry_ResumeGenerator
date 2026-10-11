@@ -1,20 +1,16 @@
-import type { TextareaHTMLAttributes, ChangeEvent, FocusEvent } from 'react';
+import type { TextareaHTMLAttributes } from 'react';
 import { CheckIcon } from '../../assets/icons/CheckIcon';
 import { WarningIcon } from '../../assets/icons/WarningIcon';
 
-interface TextAreaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>,
- 'onChange' | 'onBlur'> {
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
-  name: string;
-  value: string;
   error?: string;
   touched?: boolean;
   hint?: string;
-  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-  onBlur: (e: FocusEvent<HTMLTextAreaElement>) => void;
 }
 
-export function TextArea({ label, name, value, error, touched, hint, onChange, onBlur, ...props }: TextAreaProps) {
+export function TextArea({ label, name, error, touched, hint, ...props }: TextAreaProps) {
+  const value = props.value as string;
   const isValid = touched && !error && value;
   const isError = touched && !!error;
 
@@ -34,19 +30,15 @@ export function TextArea({ label, name, value, error, touched, hint, onChange, o
           {...props}
           id={name}
           name={name}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
-          className={`w-full p-2 border rounded-md outline-none resize-none transition-colors focus:border-purple-500 
-            ${borderClass}`}
+          className={`w-full p-2 border rounded-md outline-none resize-none transition-colors focus:border-purple-500 ${borderClass}`}
         />
         {isValid && (
-          <span className="absolute right-3 bottom-3 text-green-500">
+          <span className="absolute right-3 bottom-3 text-green-500 pointer-events-none">
             <CheckIcon />
           </span>
         )}
         {isError && (
-          <span className="absolute right-3 bottom-3 text-red-500">
+          <span className="absolute right-3 bottom-3 text-red-500 pointer-events-none">
             <WarningIcon />
           </span>
         )}
