@@ -12,7 +12,7 @@ export function CvPreview() {
 
   return (
     <div className="text-gray-800">
-      {/* ===== ხელი, კონტაქტი, ფოტო ===== */}
+      {/* Name, Surname, email, phone, aboutme, image */}
       <div className="flex justify-between items-start gap-6 mb-8">
         <div className="flex-1">
           {(personalInfo.name || personalInfo.lastName) && (
@@ -44,37 +44,35 @@ export function CvPreview() {
         </div>
 
         {personalInfo.image && (
-          <img
-            src={personalInfo.image}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-2 border-gray-200 shrink-0"
-          />
+          <img src={personalInfo.image} alt=""
+            className="w-32 h-32 rounded-full object-cover border-2 border-gray-200 shrink-0"/>
         )}
       </div>
 
-      {/* ===== გამოცდილება ===== */}
+      {/* გამოცდილება */}
       {hasExperiences && (
         <div className="mb-6">
           <h3 className="text-red-500 font-bold mb-2">გამოცდილება</h3>
           {experiences.map(
-            (exp, i) =>
+            (exp, i)=>
               exp.position && (
                 <div key={i} className="mb-4">
                   <p className="font-bold text-md">
-                    {exp.position}
-                    {exp.employer && `, ${exp.employer}`}
+                   {exp.position}
+                   {exp.employer && `, ${exp.employer}`}
                   </p>
-                  {(exp.startDate || exp.endDate) && (
-                    <p className="text-xs text-gray-500 italic">
-                      {exp.startDate} - {exp.endDate}
-                    </p>
+              {(exp.startDate || exp.endDate) && (
+                <p className="text-xs text-gray-500 italic">
+                  {exp.startDate} - {exp.endDate}
+                </p>
                   )}
-                  {exp.description && <p className="text-sm mt-1">{exp.description}</p>}
-                </div>
+                 {exp.description && <p className="text-sm mt-1">{exp.description}</p>}
+              </div>
               )
           )}
         </div>
       )}
+
 
       {/* ===== განათლება ===== */}
       {hasEducations && (

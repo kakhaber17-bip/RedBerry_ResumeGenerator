@@ -15,28 +15,19 @@ interface DatePickerProps {
 }
 
 export function DatePicker({
-  label,
-  name,
-  value,
-  error,
-  touched,
-  hint,
-  onChange,
-  onBlur,
+  label, name, value, error, touched, hint,
+  onChange,onBlur,
 }: DatePickerProps) {
   const isValid = touched && !error && value;
   const isError = touched && !!error;
 
-  const borderClass = isError
-    ? 'border-red-500'
-    : isValid
-    ? 'border-green-500'
-    : 'border-gray-300';
+  const borderClass = isError ? 'border-red-500'
+    : isValid ? 'border-green-500' : 'border-gray-300';
 
   const selectedDate = value ? new Date(value) : null;
 
   const handleChange = (date: Date | null) => {
-    if (!date) {
+    if(!date) {
       onChange(name, '');
       return;
     }
@@ -45,23 +36,13 @@ export function DatePicker({
   };
 
   return (
-    <div className="flex flex-col gap-1 w-full">
-      <label className="text-sm font-bold text-gray-700">{label}</label>
+  <div className="flex flex-col gap-1 w-full">
+    <label className="text-sm font-bold text-gray-700">{label}</label>
       <div className="relative">
-        <ReactDatePicker
-          selected={selectedDate}
-          onChange={handleChange}
-          onBlur={onBlur}
-          dateFormat="dd/MM/yyyy"
-          placeholderText="აირჩიე თარიღი"
-          showMonthDropdown
-          showYearDropdown
-          dropdownMode="select"
-          yearDropdownItemNumber={80}
-          scrollableYearDropdown
-          className={`w-full p-2 border rounded-md outline-none transition-colors focus:border-purple-500 ${borderClass}`}
-          calendarClassName="shadow-lg"
-        />
+        <ReactDatePicker selected={selectedDate} onChange={handleChange} onBlur={onBlur}
+          dateFormat="dd/MM/yyyy" placeholderText="აირჩიე თარიღი"showMonthDropdown
+          showYearDropdown dropdownMode="select" yearDropdownItemNumber={80} scrollableYearDropdown
+          className={`w-full p-2 border rounded-md outline-none transition-colors focus:border-purple-500 ${borderClass}`}calendarClassName="shadow-lg" />
         {isValid && (
           <span className="absolute right-10 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none z-10">
             <CheckIcon />

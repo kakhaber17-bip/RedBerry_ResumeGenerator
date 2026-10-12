@@ -1,4 +1,4 @@
-import type { TextareaHTMLAttributes } from 'react';
+import type { TextareaHTMLAttributes, ChangeEvent } from 'react';
 import { CheckIcon } from '../../assets/icons/CheckIcon';
 import { WarningIcon } from '../../assets/icons/WarningIcon';
 
@@ -9,32 +9,30 @@ interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   hint?: string;
 }
 
-export function TextArea({ label, name, error, touched, hint, ...props }: TextAreaProps) {
+export function TextArea({ label, name, error, touched, hint, onChange, ...props }: TextAreaProps){
   const value = props.value as string;
   const isValid = touched && !error && value;
   const isError = touched && !!error;
 
-  const borderClass = isError
-    ? 'border-red-500'
-    : isValid
-    ? 'border-green-500'
-    : 'border-gray-300';
+  const borderClass = isError ? 'border-red-500'
+    : isValid ? 'border-green-500' : 'border-gray-300';
 
-  return (
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>)=>{
+    e.target.value = e.target.value.replace(/^\s+/, '');
+    if (onChange) onChange(e);
+  };
+
+  return(
     <div className="flex flex-col gap-1 w-full">
       <label htmlFor={name} className="text-sm font-bold text-gray-700">
         {label}
       </label>
       <div className="relative">
-        <textarea
-          {...props}
-          id={name}
-          name={name}
-          className={`w-full p-2 border rounded-md outline-none resize-none transition-colors focus:border-purple-500 ${borderClass}`}
-        />
+        <textarea {...props} id={name} name={name} onChange={handleChange}
+          className={`w-full p-2 border rounded-md outline-none resize-none transition-colors focus:border-purple-500 ${borderClass}`}/>
         {isValid && (
           <span className="absolute right-3 bottom-3 text-green-500 pointer-events-none">
-            <CheckIcon />
+            <CheckIcon/>
           </span>
         )}
         {isError && (

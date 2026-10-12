@@ -16,13 +16,13 @@ export function LandingPage() {
     navigate('/personal-info');
   };
 
-  return (
+  return(
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-white to-blue-100 flex flex-col items-center p-6 relative">
       <button type="button" onClick={() => navigate('/my-cvs')}
         className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm hover:bg-gray-50 transition-colors" aria-label="ჩემი რეზიუმეები">
         <ListIcon className="w-5 h-5 text-gray-700" />
         <span className="text-sm font-medium text-gray-700 cursor-pointer">
-          ჩემი რეზიუმეები
+         რეზიუმეები
         </span>
         {savedList.length > 0 && (
           <span className="ml-1 bg-purple-600 text-white text-xs rounded-full px-2 py-0.5">
