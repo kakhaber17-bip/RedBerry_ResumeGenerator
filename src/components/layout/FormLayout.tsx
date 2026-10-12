@@ -21,7 +21,6 @@ export function FormLayout({ title, step, totalSteps, children }: FormLayoutProp
             className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors mb-4" aria-label="უკან მთავარ გვერდზე">
             <ArrowLeftIcon />
           </button>
-
           <div className="flex justify-between items-center border-b border-gray-300 pb-2 mb-6">
             <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
             <span className="font-bold text-xl text-gray-700">

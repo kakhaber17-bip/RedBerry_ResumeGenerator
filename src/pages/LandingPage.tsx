@@ -18,15 +18,10 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-white to-blue-100 flex flex-col items-center p-6 relative">
-      {/* 🔝 კუთხის აიკონი — ჩემი რეზიუმეები */}
-      <button
-        type="button"
-        onClick={() => navigate('/my-cvs')}
-        className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm hover:bg-gray-50 transition-colors"
-        aria-label="ჩემი რეზიუმეები"
-      >
+      <button type="button" onClick={() => navigate('/my-cvs')}
+        className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm hover:bg-gray-50 transition-colors" aria-label="ჩემი რეზიუმეები">
         <ListIcon className="w-5 h-5 text-gray-700" />
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-gray-700 cursor-pointer">
           ჩემი რეზიუმეები
         </span>
         {savedList.length > 0 && (
@@ -40,12 +35,8 @@ export function LandingPage() {
         <img src={redberryLogo} alt="Redberry" className="w-48 h-auto object-contain" />
 
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 leading-tight">
-          შექმენი შენი <span className="text-red-500">CV</span>
+        <span className="text-red-500">CV</span> Generator
         </h1>
-
-        <p className="text-lg text-gray-600 max-w-lg">
-          შეავსე რამდენიმე მარტივი ნაბიჯი და მიიღე პროფესიონალური რეზიუმე.
-        </p>
 
         <Button onClick={handleNew} className="text-lg px-8 py-3">
           ახალი რეზიუმე

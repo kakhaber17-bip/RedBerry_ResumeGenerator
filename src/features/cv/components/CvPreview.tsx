@@ -1,5 +1,7 @@
 import { useContext } from 'react';
 import { CvContext } from '../context/CvContext';
+import { MailIcon } from '../../../assets/icons/MailIcon';
+import { PhoneIcon } from '../../../assets/icons/PhoneIcon';
 
 export function CvPreview() {
   const { cvData } = useContext(CvContext);
@@ -10,6 +12,7 @@ export function CvPreview() {
 
   return (
     <div className="text-gray-800">
+      {/* ===== ხელი, კონტაქტი, ფოტო ===== */}
       <div className="flex justify-between items-start gap-6 mb-8">
         <div className="flex-1">
           {(personalInfo.name || personalInfo.lastName) && (
@@ -18,8 +21,19 @@ export function CvPreview() {
             </h2>
           )}
 
-          {personalInfo.email && <p className="text-sm mb-1">📧 {personalInfo.email}</p>}
-          {personalInfo.phone && <p className="text-sm">📞 {personalInfo.phone}</p>}
+          {personalInfo.email && (
+            <p className="text-sm mb-1 flex items-center gap-2 text-gray-700">
+              <MailIcon className="w-4 h-4 text-gray-500 shrink-0" />
+              {personalInfo.email}
+            </p>
+          )}
+
+          {personalInfo.phone && (
+            <p className="text-sm flex items-center gap-2 text-gray-700">
+              <PhoneIcon className="w-4 h-4 text-gray-500 shrink-0" />
+              {personalInfo.phone}
+            </p>
+          )}
 
           {personalInfo.aboutMe && (
             <div className="mt-6">
@@ -38,6 +52,7 @@ export function CvPreview() {
         )}
       </div>
 
+      {/* ===== გამოცდილება ===== */}
       {hasExperiences && (
         <div className="mb-6">
           <h3 className="text-red-500 font-bold mb-2">გამოცდილება</h3>
@@ -61,6 +76,7 @@ export function CvPreview() {
         </div>
       )}
 
+      {/* ===== განათლება ===== */}
       {hasEducations && (
         <div>
           <h3 className="text-red-500 font-bold mb-2">განათლება</h3>

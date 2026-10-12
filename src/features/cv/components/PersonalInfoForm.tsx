@@ -11,6 +11,7 @@ import type { PersonalInfo } from '../types';
 export function PersonalInfoForm() {
   const { cvData, setCvData } = useContext(CvContext);
   const navigate = useNavigate();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (
@@ -32,24 +33,19 @@ export function PersonalInfoForm() {
   };
 
   return (
-    <Formik<PersonalInfo>
-      initialValues={cvData.personalInfo}
-      validationSchema={personalInfoSchema}
+    <Formik<PersonalInfo> initialValues={cvData.personalInfo} validationSchema={personalInfoSchema}
       onSubmit={(values) => {
         setCvData((prev) => ({ ...prev, personalInfo: values }));
         navigate('/experience');
       }}
     >
-      {(formik) => (
+      {(formik) =>(
         <Form className="flex flex-col gap-6">
           <div className="flex gap-4">
-            <Input
-              label="სახელი"
-              name="name"
-              value={formik.values.name}
-              onChange={(e) => {
+            <Input label="სახელი" name="name" value={formik.values.name}
+              onChange={(e)=>{
                 formik.handleChange(e);
-                setCvData((prev) => ({
+                setCvData((prev)=>({
                   ...prev,
                   personalInfo: { ...prev.personalInfo, name: e.target.value },
                 }));
@@ -57,13 +53,11 @@ export function PersonalInfoForm() {
               onBlur={formik.handleBlur}
               error={formik.errors.name}
               touched={formik.touched.name}
-              hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
+              hint="მინიმუმ 2 ასო, ქართული ასოები"
             />
-            <Input
-              label="გვარი"
-              name="lastName"
-              value={formik.values.lastName}
-              onChange={(e) => {
+
+            <Input label="გვარი" name="lastName"value={formik.values.lastName}
+              onChange={(e)=>{
                 formik.handleChange(e);
                 setCvData((prev) => ({
                   ...prev,
@@ -73,36 +67,29 @@ export function PersonalInfoForm() {
               onBlur={formik.handleBlur}
               error={formik.errors.lastName}
               touched={formik.touched.lastName}
-              hint="მინიმუმ 2 სიმბოლო, ქართული ასოები"
+              hint="მინიმუმ 2 ასო, ქართული ასოები"
             />
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-bold text-gray-700">პირადი ფოტოს ატვირთვა</span>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-2 rounded-md transition-colors"
-            >
-              ატვირთვა
+      
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-bold text-gray-700">პირადი ფოტოს ატვირთვა</span>
+            <button type="button" onClick={() => fileInputRef.current?.click()}
+              className="bg-blue-600 hover:bg-blue-900 text-white font-medium px-7 py-2 rounded-md transition-colors cursor-pointer">
+              ფოტოს ატვირთვა
             </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageUpload(e, formik.setFieldValue)}
+            <input ref={fileInputRef} type="file" accept="image/*"
+             onChange={(e) => handleImageUpload(e, formik.setFieldValue)} 
               className="hidden"
             />
           </div>
 
+          {/* ფოტოს error */}
           {formik.touched.image && formik.errors.image && (
             <span className="text-xs text-red-500">{formik.errors.image}</span>
           )}
 
-          <TextArea
-            label="ჩემ შესახებ"
-            name="aboutMe"
-            value={formik.values.aboutMe}
+          <TextArea label="ჩემ შესახებ" name="aboutMe" placeholder="ზოგადი ინფორმაცია ჩემს შესახებ..." value={formik.values.aboutMe}
             onChange={(e) => {
               formik.handleChange(e);
               setCvData((prev) => ({
@@ -113,20 +100,15 @@ export function PersonalInfoForm() {
             onBlur={formik.handleBlur}
             error={formik.errors.aboutMe}
             touched={formik.touched.aboutMe}
-            rows={4}
-            hint="მინიმუმ 2 სიმბოლო"
-          />
+            rows={8}
+            hint="მინიმუმ 2 სიმბოლო" />
 
           <div className="flex gap-4">
-            <Input
-              label="ელ.ფოსტა"
-              name="email"
-              type="email"
-              placeholder="example@redberry.ge"
+            <Input label="ელ.ფოსტა" name="email" type="email" placeholder="kakhaber@redberry.ge"
               value={formik.values.email}
-              onChange={(e) => {
+               onChange={(e)=>{
                 formik.handleChange(e);
-                setCvData((prev) => ({
+                setCvData((prev) =>({
                   ...prev,
                   personalInfo: { ...prev.personalInfo, email: e.target.value },
                 }));
@@ -136,15 +118,13 @@ export function PersonalInfoForm() {
               touched={formik.touched.email}
               hint="უნდა მთავრდებოდეს @redberry.ge-ით"
             />
-            <Input
-              label="მობილურის ნომერი"
-              name="phone"
-              placeholder="+995 5XX XX XX XX"
+
+            <Input label="მობილურის ნომერი"name="phone" placeholder="+995 5XX XX XX XX"
               value={formik.values.phone}
               onChange={(e) => {
                 const formatted = formatPhone(e.target.value);
                 formik.setFieldValue('phone', formatted);
-                setCvData((prev) => ({
+                setCvData((prev)=>({
                   ...prev,
                   personalInfo: { ...prev.personalInfo, phone: formatted },
                 }));
