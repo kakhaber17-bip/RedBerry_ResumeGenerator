@@ -35,7 +35,7 @@ export function DatePicker({
     onChange(name, iso);
   };
 
-  return (
+  return(
   <div className="flex flex-col gap-1 w-full">
     <label className="text-sm font-bold text-gray-700">{label}</label>
       <div className="relative">

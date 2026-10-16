@@ -1,20 +1,21 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CvContext } from '../features/cv/context/CvContext';
 import { ArrowLeftIcon } from '../assets/icons/ArrowLeftIcon';
 import { Button } from '../components/ui/Button';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { loadCvById, deleteSavedCv } from '../features/cv/store/cvSlice';
 
 export function MyCvsPage() {
   const navigate = useNavigate();
-  const { savedList, loadCvById, deleteSavedCv } = useContext(CvContext);
+  const dispatch = useAppDispatch();
+  const savedList = useAppSelector((state) => state.cv.savedList);
 
   const handleLoad = (id: string) => {
-    loadCvById(id);
+    dispatch(loadCvById(id));
     navigate('/personal-info');
   };
 
   const handleDelete = (id: string) => {
-    deleteSavedCv(id);
+    dispatch(deleteSavedCv(id));
   };
 
   return (

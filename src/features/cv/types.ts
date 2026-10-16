@@ -28,7 +28,7 @@ export interface CvData {
   educations: Education[];
 }
 
-// 🆕 შენახული CV
+//saved cv
 export interface SavedCv {
   id: string;
   createdAt: number;

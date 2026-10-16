@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon } from '../../assets/icons/ArrowLeftIcon';
 import { CvPreview } from '../../features/cv/components/CvPreview';
 
-interface FormLayoutProps {
+interface FormLayoutProps{
   title: string;
   step: number;
   totalSteps: number;
@@ -14,7 +14,7 @@ export function FormLayout({ title, step, totalSteps, children }: FormLayoutProp
   const navigate = useNavigate();
 
   return(
-    <div className="min-h-screen bg-gray-50 p-6 md:p-10">
+    <div className="min-h-screen bg-gray-100 p-6 md:p-10">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div className="flex flex-col">
           <button type="button"onClick={() => navigate('/')}

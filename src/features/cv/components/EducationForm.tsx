@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { Formik, Form, FieldArray } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '../../../components/ui/Input';
@@ -6,13 +5,17 @@ import { Select } from '../../../components/ui/Select';
 import { TextArea } from '../../../components/ui/TextArea';
 import { DatePicker } from '../../../components/ui/DatePicker';
 import { Button } from '../../../components/ui/Button';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
-  CvContext,
-  emptyEducation,
-  emptyPersonalInfo,
-} from '../context/CvContext';
+  setCvData,
+  updateEducation,
+  addEducation,
+  removeEducation,
+  saveCurrentCv,
+  resetDraft,
+} from '../store/cvSlice';
+import { emptyEducation } from '../store/initialState';
 import { educationFormSchema } from '../validation/schemas';
-import { saveCvToList } from '../storage/cvStorage';
 import type { Education } from '../types';
 
 interface FormValues {
@@ -37,19 +40,11 @@ const degreeOptions = [
 ];
 
 export function EducationForm() {
-  const { cvData, setCvData } = useContext(CvContext);
+  const dispatch = useAppDispatch();
+  const cvData = useAppSelector((state) => state.cv.cvData);
   const navigate = useNavigate();
 
   const initial = cvData.educations.length ? cvData.educations : [emptyEducation];
-
-  const updateCv = (index: number, field: keyof Education, value: string) => {
-    setCvData((prev) => {
-      const updated = [...prev.educations];
-      if (!updated[index]) updated[index] = { ...emptyEducation };
-      updated[index] = { ...updated[index], [field]: value };
-      return { ...prev, educations: updated };
-    });
-  };
 
   return (
     <Formik<FormValues>
@@ -58,113 +53,96 @@ export function EducationForm() {
       onSubmit={(values, { resetForm }) => {
         const finalData = { ...cvData, educations: values.educations };
 
-        saveCvToList(finalData);
+        dispatch(setCvData(finalData));
 
-        setCvData({
-          personalInfo: { ...emptyPersonalInfo },
-          experiences: [],
-          educations: [],
-        });
+        dispatch(saveCurrentCv());
+
+        dispatch(resetDraft());
 
         resetForm({ values: { educations: [{ ...emptyEducation }] } });
 
         alert('CV წარმატებით შეინახა!');
-
         navigate('/');
-      }}
-    >
+      }}>
+
       {(formik) => (
         <Form className="flex flex-col gap-6">
           <FieldArray name="educations">
             {({ push, remove }) => (
-              <div className="flex flex-col gap-8">
-                {formik.values.educations.map((_, index) => (
-                  <div key={index} className="flex flex-col gap-4 border-b pb-6 last:border-0">
-                    <div className="flex gap-4">
-                      <Input
-                        label="სასწავლებელი"
-                        name={`educations.${index}.institute`}
+            <div className="flex flex-col gap-8">
+              {formik.values.educations.map((_, index) => (
+                <div key={index} className="flex flex-col gap-4 border-b pb-6 last:border-0">
+                  <div className="flex gap-4">
+                    <Input label="სასწავლებელი" name={`educations.${index}.institute`}
                         value={formik.values.educations[index].institute}
                         onChange={(e) => {
                           formik.handleChange(e);
-                          updateCv(index, 'institute', e.target.value);
+                          dispatch(
+                            updateEducation({ index, field: 'institute', value: e.target.value })
+                          );
                         }}
                         onBlur={formik.handleBlur}
                         error={getFieldError(formik.errors.educations, index, 'institute')}
-                        touched={getFieldTouched(formik.touched.educations, index, 'institute')}
-                      />
+                        touched={getFieldTouched(formik.touched.educations, index, 'institute')}/>
                       <Select
                         label="ხარისხი"
                         name={`educations.${index}.degree`}
                         value={formik.values.educations[index].degree}
                         onChange={(e) => {
                           formik.handleChange(e);
-                          updateCv(index, 'degree', e.target.value);
+                          dispatch(
+                            updateEducation({ index, field: 'degree', value: e.target.value })
+                          );
                         }}
                         onBlur={formik.handleBlur}
-                        error={getFieldError(formik.errors.educations, index, 'degree')}
-                        touched={getFieldTouched(formik.touched.educations, index, 'degree')}
-                        options={degreeOptions}
-                      />
+                        error={getFieldError(formik.errors.educations, index, 'degree')}  touched={getFieldTouched(formik.touched.educations, index, 'degree')}
+                        options={degreeOptions}/>
                     </div>
 
-                    <DatePicker
-                      label="დამთავრების რიცხვი"
+                    <DatePicker label="დამთავრების რიცხვი"
                       name={`educations.${index}.dueDate`}
                       value={formik.values.educations[index].dueDate}
                       onChange={(name, value) => {
                         formik.setFieldValue(name, value);
-                        updateCv(index, 'dueDate', value);
+                        dispatch(updateEducation({ index, field: 'dueDate', value }));
                       }}
                       onBlur={() => formik.setFieldTouched(`educations.${index}.dueDate`, true)}
                       error={getFieldError(formik.errors.educations, index, 'dueDate')}
-                      touched={getFieldTouched(formik.touched.educations, index, 'dueDate')}
-                    />
+                      touched={getFieldTouched(formik.touched.educations, index, 'dueDate')}/>
 
-                    <TextArea
-                      label="აღწერა"
+                    <TextArea label="აღწერა"
                       name={`educations.${index}.description`}
                       value={formik.values.educations[index].description}
                       onChange={(e) => {
                         formik.handleChange(e);
-                        updateCv(index, 'description', e.target.value);
+                        dispatch(
+                          updateEducation({ index, field: 'description', value: e.target.value })
+                        );
                       }}
                       onBlur={formik.handleBlur}
                       error={getFieldError(formik.errors.educations, index, 'description')}
                       touched={getFieldTouched(formik.touched.educations, index, 'description')}
-                      rows={3}
-                    />
+                      rows={3}/>
 
                     {index > 0 && (
-                      <button
-                        type="button"
+                      <button type="button"
                         onClick={() => {
                           remove(index);
-                          setCvData((prev) => ({
-                            ...prev,
-                            educations: prev.educations.filter((_, i) => i !== index),
-                          }));
+                          dispatch(removeEducation(index));
                         }}
-                        className="text-red-500 text-sm self-start"
-                      >
+                        className="text-red-500 text-sm self-start">
                         წაშლა
                       </button>
                     )}
                   </div>
                 ))}
 
-                <Button
-                  type="button"
-                  variant="secondary"
+                <Button type="button"variant="secondary"
                   onClick={() => {
                     push(emptyEducation);
-                    setCvData((prev) => ({
-                      ...prev,
-                      educations: [...prev.educations, { ...emptyEducation }],
-                    }));
+                    dispatch(addEducation());
                   }}
-                  className="self-start text-sm"
-                >
+                  className="self-start text-sm">
                   მეტი განათლების დამატება
                 </Button>
               </div>
@@ -172,7 +150,7 @@ export function EducationForm() {
           </FieldArray>
 
           <div className="flex justify-between mt-4">
-            <Button type="button" onClick={() => navigate('/experience')}>
+            <Button type="button" onClick={()=> navigate('/experience')}>
               უკან
             </Button>
             <Button type="submit">დასრულება</Button>
