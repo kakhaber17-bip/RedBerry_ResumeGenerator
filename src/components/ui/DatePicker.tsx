@@ -3,15 +3,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { CheckIcon } from '../../assets/icons/CheckIcon';
 import { WarningIcon } from '../../assets/icons/WarningIcon';
 
-interface DatePickerProps {
+interface DatePickerProps{
   label: string;
   name: string;
   value: string;
   error?: string;
   touched?: boolean;
   hint?: string;
-  onChange: (name: string, value: string) => void;
-  onBlur?: () => void;
+  onChange: (name: string, value: string)=> void;
+  onBlur?: ()=>void;
 }
 
 export function DatePicker({
@@ -50,12 +50,12 @@ export function DatePicker({
         )}
         {isError && (
           <span className="absolute right-10 top-1/2 -translate-y-1/2 text-red-500 pointer-events-none z-10">
-            <WarningIcon />
+            <WarningIcon/>
           </span>
         )}
       </div>
-      {hint && !isError && <span className="text-xs text-gray-500">{hint}</span>}
-      {isError && <span className="text-xs text-red-500">{error}</span>}
+        {hint && !isError && <span className="text-xs text-gray-500">{hint}</span>}
+       {isError && <span className="text-xs text-red-500">{error}</span>}
     </div>
   );
 }

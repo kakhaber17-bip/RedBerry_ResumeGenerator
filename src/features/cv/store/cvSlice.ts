@@ -62,7 +62,7 @@ const cvSlice = createSlice({
       saveDraft(state.cvData);
     },
 
-    removeExperience(state, action: PayloadAction<number>) {
+    removeExperience(state, action: PayloadAction<number>){
       state.cvData.experiences.splice(action.payload, 1);
       saveDraft(state.cvData);
     },
@@ -86,7 +86,7 @@ const cvSlice = createSlice({
       saveDraft(state.cvData);
     },
 
-    removeEducation(state, action: PayloadAction<number>) {
+    removeEducation(state, action: PayloadAction<number>){
       state.cvData.educations.splice(action.payload, 1);
       saveDraft(state.cvData);
     },
@@ -97,7 +97,7 @@ const cvSlice = createSlice({
       state.savedList = [saved, ...state.savedList];
     },
 
-    deleteSavedCv(state, action: PayloadAction<string>) {
+    deleteSavedCv(state, action: PayloadAction<string>){
       state.savedList = deleteCvFromList(action.payload);
     },
 

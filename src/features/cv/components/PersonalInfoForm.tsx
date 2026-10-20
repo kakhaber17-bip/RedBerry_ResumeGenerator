@@ -9,7 +9,7 @@ import { setCvData, updatePersonalInfo } from '../store/cvSlice';
 import { personalInfoSchema, formatPhone } from '../validation/schemas';
 import type { PersonalInfo } from '../types';
 
-export function PersonalInfoForm() {
+export function PersonalInfoForm(){
   const dispatch = useAppDispatch();
   const cvData = useAppSelector((state) => state.cv.cvData);
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export function PersonalInfoForm() {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onloadend = () => {
+    reader.onloadend = ()=>{
       setFieldValue('image', reader.result);
       dispatch(updatePersonalInfo({ field: 'image', value: reader.result as string }));
     };

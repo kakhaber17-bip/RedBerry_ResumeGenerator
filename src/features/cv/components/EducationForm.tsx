@@ -41,7 +41,7 @@ const degreeOptions = [
 
 export function EducationForm() {
   const dispatch = useAppDispatch();
-  const cvData = useAppSelector((state) => state.cv.cvData);
+  const cvData = useAppSelector((state)=>state.cv.cvData);
   const navigate = useNavigate();
 
   const initial = cvData.educations.length ? cvData.educations : [emptyEducation];
@@ -61,11 +61,11 @@ export function EducationForm() {
 
         resetForm({ values: { educations: [{ ...emptyEducation }] } });
 
-        alert('CV წარმატებით შეინახა!');
+        alert('CV შეიქმნა');
         navigate('/');
       }}>
 
-      {(formik) => (
+      {(formik)=>(
         <Form className="flex flex-col gap-6">
           <FieldArray name="educations">
             {({ push, remove }) => (
@@ -96,8 +96,8 @@ export function EducationForm() {
                         }}
                         onBlur={formik.handleBlur}
                         error={getFieldError(formik.errors.educations, index, 'degree')}  touched={getFieldTouched(formik.touched.educations, index, 'degree')}
-                        options={degreeOptions}/>
-                    </div>
+                      options={degreeOptions}/>
+                   </div>
 
                     <DatePicker label="დამთავრების რიცხვი"
                       name={`educations.${index}.dueDate`}

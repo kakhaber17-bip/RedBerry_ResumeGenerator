@@ -70,7 +70,7 @@ export const educationFormSchema = Yup.object({
 });
 
 
-//phone number format for georgian number
+//ნომრის ფორმატი.
 export function formatPhone(raw: string): string {
   let digits = raw.replace(/\D/g, '');
 

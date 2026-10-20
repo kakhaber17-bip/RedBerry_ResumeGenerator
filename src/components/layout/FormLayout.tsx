@@ -10,14 +10,14 @@ interface FormLayoutProps{
   children: ReactNode;
 }
 
-export function FormLayout({ title, step, totalSteps, children }: FormLayoutProps) {
+export function FormLayout({ title, step, totalSteps, children }: FormLayoutProps){
   const navigate = useNavigate();
 
   return(
     <div className="min-h-screen bg-gray-100 p-6 md:p-10">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
         <div className="flex flex-col">
-          <button type="button"onClick={() => navigate('/')}
+          <button type="button"onClick={()=>navigate('/')}
             className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors mb-4" aria-label="უკან მთავარ გვერდზე">
             <ArrowLeftIcon />
           </button>

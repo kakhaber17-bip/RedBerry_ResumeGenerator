@@ -4,46 +4,39 @@ import { Button } from '../components/ui/Button';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { loadCvById, deleteSavedCv } from '../features/cv/store/cvSlice';
 
-export function MyCvsPage() {
+export function MyCvsPage(){
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const savedList = useAppSelector((state) => state.cv.savedList);
 
-  const handleLoad = (id: string) => {
+  const handleLoad = (id: string)=>{
     dispatch(loadCvById(id));
     navigate('/personal-info');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string)=>{
     dispatch(deleteSavedCv(id));
   };
 
-  return (
+  return(
     <div className="min-h-screen bg-gray-50 p-6 md:p-10">
       <div className="max-w-3xl mx-auto">
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors mb-6"
-          aria-label="უკან"
-        >
+        <button type="button" onClick={()=> navigate('/')}
+          className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100 transition-colors mb-6" aria-label="უკან">
           <ArrowLeftIcon />
         </button>
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">ჩემი რეზიუმეები</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">რეზიუმეები</h1>
 
         {savedList.length === 0 ? (
           <div className="bg-white border border-gray-200 rounded-lg p-10 text-center">
-            <p className="text-gray-500 mb-4">ჯერ არ გაქვს შენახული რეზიუმე.</p>
-            <Button onClick={() => navigate('/personal-info')}>ახალი რეზიუმე</Button>
+           <p className="text-gray-500 mb-4">0 რეზიუმე</p>
+            <Button onClick={()=> navigate('/personal-info')}>რეზიუმეს შექმნა</Button>
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {savedList.map((cv) => (
-              <div
-                key={cv.id}
-                className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4 shadow-sm"
-              >
+            {savedList.map((cv)=>(
+              <div key={cv.id} className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                 <div className="flex flex-col">
                   <span className="font-bold text-gray-800">
                     {cv.data.personalInfo.name} {cv.data.personalInfo.lastName}
@@ -54,16 +47,12 @@ export function MyCvsPage() {
                 </div>
 
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => handleLoad(cv.id)}
-                    className="px-4 py-1.5 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors"
-                  >
+                 <button onClick={()=> handleLoad(cv.id)}
+                  className="px-4 py-1.5 text-sm bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors cursor-pointer">
                     გახსნა
                   </button>
-                  <button
-                    onClick={() => handleDelete(cv.id)}
-                    className="px-4 py-1.5 text-sm bg-red-100 hover:bg-red-200 text-red-700 rounded transition-colors"
-                  >
+                  <button onClick={() => handleDelete(cv.id)}
+                    className="px-4 py-1.5 text-sm bg-red-200 hover:bg-red-400 text-red-700 rounded transition-colors cursor-pointer">
                     წაშლა
                   </button>
                 </div>

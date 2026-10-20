@@ -4,7 +4,7 @@ const SAVED_LIST_KEY = 'redberry_saved_cvs';
 const DRAFT_KEY = 'redberry_draft_cv';
 
 export function loadDraft(fallback: CvData): CvData {
-  try {
+  try{
     const raw = localStorage.getItem(DRAFT_KEY);
     if(!raw) return fallback;
     const parsed = JSON.parse(raw) as Partial<CvData>;
